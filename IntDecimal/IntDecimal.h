@@ -16,8 +16,12 @@ public:
 	IntDecimal(const float&);			// float로 생성				(단, 범위 초과시 -2147483648이나 2147483647로 표기/소수점 7자리에서 반올림)
 	IntDecimal(const double&);			// double로 생성			(단, 범위 초과시 -2147483648이나 2147483647로 표기/소수점 7자리에서 반올림)
 
-	IntDecimal(const IntDecimal&);
+	IntDecimal(const IntDecimal&);		// 복사생성
 
 
+	float toInt();						// Int로 변환
+	float toUnsignedInt();				// UnsignedInt로 변환
+	float toFloat();					// float로 변환
+	float toDouble();					// Double로 변환
 };
 
