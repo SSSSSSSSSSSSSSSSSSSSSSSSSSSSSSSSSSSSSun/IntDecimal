@@ -3,7 +3,7 @@ class IntDecimal
 {
 private:
 	unsigned int integerPart;		// 정수부
-	int decimalPart;				// 소수부 (0~999999)
+	unsigned int decimalPart;		// 소수부 (0~999999)
 	bool isPositive;				// 부호, 0의 경우는 상관 안하지만 true로 두는 것을 원칙으로 함
 public:
 
@@ -17,6 +17,7 @@ public:
 	IntDecimal(const unsigned short&);	// unsigned short로 생성	(0~65535)
 	IntDecimal(const int&);				// int로 생성				(~2147483648~2147483647)
 	IntDecimal(const unsigned int&);	// unsigned int로 생성		(0~4294967295)
+	IntDecimal(int&, const unsigned int&);	// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
 	
 	IntDecimal(float);
 	// float로 생성				(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
@@ -137,13 +138,13 @@ public:
 	bool operator<(const double&);
 	bool operator<(const IntDecimal&);
 
-	IntDecimal& operator=(const short&);
+	/*IntDecimal& operator=(const short&);
 	IntDecimal& operator=(const unsigned short&);
 	IntDecimal& operator=(const int&);
 	IntDecimal& operator=(const unsigned int&);
 	IntDecimal& operator=(const float&);
 	IntDecimal& operator=(const double&);
-	IntDecimal& operator=(const IntDecimal&);
+	IntDecimal& operator=(const IntDecimal&);*/
 
 	//=====================================
 	//그 외
@@ -155,8 +156,8 @@ public:
 	double toDouble();					// Double로 변환
 
 
-	int getIntegerPart(); 	// 정수부 전달
-	int getDecimalPart(); 	// 소수부 전달
+	unsigned int getIntegerPart(); 	// 정수부 전달
+	unsigned int getDecimalPart(); 	// 소수부 전달
 	bool getSign();			// 부호 전달
 	char printSign();		// 부호 출력
 

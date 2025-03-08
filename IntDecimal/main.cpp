@@ -19,6 +19,12 @@ void inputIntDecimal(short input, IntDecimal& data) {
 		std::cin >> c;
 		data = c;
 		break;
+	case 4:
+		int d1;
+		unsigned d2;
+		std::cin >> d1 >> d2;
+		data = IntDecimal(d1, d2);
+		break;
 	}
 
 	return;
@@ -30,7 +36,8 @@ int main() {
 	std::cout << "1. int" << '\n';
 	std::cout << "2. float" << '\n';
 	std::cout << "3. double" << '\n';
-	std::cout << "4. Quit" << '\n';
+	std::cout << "4. int, unsigned int" << '\n';
+	std::cout << "5. Quit" << '\n';
 	std::cout << "======================================" << '\n';
 	
 	short input;
@@ -38,11 +45,11 @@ int main() {
 	while (1) {
 		std::cin >> input;
 
-		if (1 <= input && input <= 3) {
+		if (1 <= input && input <= 4) {
 			inputIntDecimal(input, a);
 			break;
 		}
-		if (input == 4)
+		if (input == 5)
 			exit(0);
 	}
 

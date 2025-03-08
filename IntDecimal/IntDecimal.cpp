@@ -1,5 +1,6 @@
 #include "IntDecimal.h"
 #include <cmath>
+#include <iostream>
 
 
 //=====================================
@@ -93,7 +94,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 	}
 
 
-	short numDigits = log10(floatNumber);
+	short numDigits = static_cast<short>(log10(floatNumber));
 
 	// 절대값 10 이상 인 수
 
@@ -101,14 +102,14 @@ IntDecimal::IntDecimal(float floatNumber) {
 		numDigits++;		// 자리수 표현을 위해 1 더함
 
 		floatNumber *= powf(10.0f, static_cast<float>(6 - numDigits));
-		integerPart = static_cast<int>(floatNumber);
+		integerPart = static_cast<unsigned int>(floatNumber);
 		if (numDigits < 6) {
-			decimalPart = integerPart % static_cast<int>(pow(10, 6 - numDigits));
-			integerPart /= static_cast<int>(pow(10, 6 - numDigits));
-			decimalPart *= static_cast<int>(pow(10, numDigits));
+			decimalPart = integerPart % static_cast<unsigned int>(pow(10, 6 - numDigits));
+			integerPart /= static_cast<unsigned int>(pow(10, 6 - numDigits));
+			decimalPart *= static_cast<unsigned int>(pow(10, numDigits));
 		}
 		else {
-			integerPart *= static_cast<int>(pow(10, numDigits - 1));
+			integerPart *= static_cast<unsigned int>(pow(10, numDigits - 1));
 			decimalPart = 0;
 		}
 
@@ -120,7 +121,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 
 	if (floatNumber >= 1) {
 		floatNumber *= 100000;
-		integerPart = static_cast<int>(floatNumber);
+		integerPart = static_cast<unsigned int>(floatNumber);
 		decimalPart = integerPart % 100000;
 		integerPart /= 100000;
 		decimalPart *= 10;
@@ -131,7 +132,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 	// 절대값 1 미만인 수
 
 	integerPart = 0;
-	decimalPart = static_cast<int>((floatNumber - integerPart) * 1000000.0f);
+	decimalPart = static_cast<unsigned int>((floatNumber - integerPart) * 1000000.0f);
 
 	if (decimalPart == 0)	// 0일때 부호를 +로 바꿔줌
 		isPositive = true;
@@ -140,7 +141,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 
 
 
-// double로 생성			(소수점 7자리 이하 절삭)
+// double로 생성			(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
 //							(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 //							(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 IntDecimal::IntDecimal(double doubleNumber) {
@@ -171,13 +172,67 @@ IntDecimal::IntDecimal(double doubleNumber) {
 		doubleNumber *= -1;
 	}
 
-	integerPart = static_cast<int>(doubleNumber);
-	decimalPart = static_cast<int>((doubleNumber - integerPart) * 1000000.0);
+	short numDigits = static_cast<short>(log10(doubleNumber));
 
-	if (integerPart == 0 && decimalPart == 0)	// 0일때 부호를 +로 바꿔줌
+	// 절대값 10 이상 인 수
+
+	if (numDigits > 0) {
+		numDigits++;		// 자리수 표현을 위해 1 더함
+
+		doubleNumber *= pow(10.0, static_cast<double>(6 - numDigits));
+		integerPart = static_cast<unsigned int>(doubleNumber);
+		if (numDigits < 6) {
+			decimalPart = integerPart % static_cast<unsigned int>(pow(10, 6 - numDigits));
+			integerPart /= static_cast<unsigned int>(pow(10, 6 - numDigits));
+			decimalPart *= static_cast<unsigned int>(pow(10, numDigits));
+		}
+		else {
+			integerPart *= static_cast<unsigned int>(pow(10, numDigits - 1));
+			decimalPart = 0;
+		}
+
+		return;
+	}
+
+
+	// 절대값 1 이상 10 미만인 수
+
+	if (doubleNumber >= 1) {
+		doubleNumber *= 100000;
+		integerPart = static_cast<unsigned int>(doubleNumber);
+		decimalPart = integerPart % 100000;
+		integerPart /= 100000;
+		decimalPart *= 10;
+
+		return;
+	}
+
+	// 절대값 1 미만인 수
+
+	integerPart = 0;
+	decimalPart = static_cast<unsigned int>((doubleNumber - integerPart) * 1000000.0f);
+
+	if (decimalPart == 0)	// 0일때 부호를 +로 바꿔줌
 		isPositive = true;
+
 }
 
+// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
+IntDecimal::IntDecimal(int& inputIntegerPart, const unsigned int& inputDecimalPart){
+	if (inputIntegerPart >= 0) {
+		isPositive = true;
+		integerPart = static_cast<unsigned int>(inputIntegerPart);
+	}
+	else {
+		isPositive = false;
+		integerPart = static_cast<unsigned int>(-inputIntegerPart);
+	}
+	
+	decimalPart = inputDecimalPart;
+	if (inputDecimalPart > 999999)
+		decimalPart = 0;
+
+}
 
 
 // 복사생성자
@@ -191,14 +246,17 @@ IntDecimal::IntDecimal(const IntDecimal& original)
 //연산자
 //=====================================
 
-
-
-
-
-
-
-
-
+//IntDecimal IntDecimal::operator+(const short& data) {
+//	
+//}
+//
+//
+//IntDecimal IntDecimal::operator+(const unsigned short&);
+//IntDecimal IntDecimal::operator+(const int&);
+//IntDecimal IntDecimal::operator+(const unsigned int&);
+//IntDecimal IntDecimal::operator+(const float&);
+//IntDecimal IntDecimal::operator+(const double&);
+//IntDecimal IntDecimal::operator+(const IntDecimal&);
 
 
 
@@ -246,13 +304,13 @@ double IntDecimal::toDouble() {
 
 
 // 정수부 전달
-int IntDecimal::getIntegerPart() {
+unsigned int IntDecimal::getIntegerPart() {
 	return integerPart;
 }
 
 
 // 소수부 전달
-int IntDecimal::getDecimalPart() {
+unsigned int IntDecimal::getDecimalPart() {
 	return decimalPart;
 }
 
