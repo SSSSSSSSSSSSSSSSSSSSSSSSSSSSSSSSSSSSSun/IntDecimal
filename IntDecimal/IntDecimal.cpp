@@ -1131,6 +1131,7 @@ IntDecimal& IntDecimal::operator=(const unsigned int& data) {
 }
 
 //(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+//(사용을 권장하지 않음.)
 //(단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
 //(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
 
@@ -1215,6 +1216,7 @@ IntDecimal& IntDecimal::operator=(float data) {
 }
 
 //(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+//(사용을 권장하지 않음.)
 //(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 //(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 IntDecimal& IntDecimal::operator=(double data) {

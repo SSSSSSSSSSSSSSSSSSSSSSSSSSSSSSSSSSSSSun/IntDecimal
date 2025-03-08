@@ -1,7 +1,7 @@
 #include <iostream>
-#include "FixedPoint.h"
+#include "IntDecimal.h"
 
-void inputIntDecimal(short input, FixedPoint& data) {
+void inputIntDecimal(short input, IntDecimal& data) {
 	std::cout << "°ª ÀÔ·Â : ";
 	switch (input) {
 	case 1:
@@ -23,7 +23,7 @@ void inputIntDecimal(short input, FixedPoint& data) {
 		int d1;
 		unsigned d2;
 		std::cin >> d1 >> d2;
-		data = FixedPoint(d1, d2);
+		data = IntDecimal(d1, d2);
 		break;
 	}
 
@@ -41,7 +41,7 @@ int main() {
 	std::cout << "======================================" << '\n';
 	
 	short input;
-	FixedPoint a;
+	IntDecimal a;
 	while (1) {
 		std::cin >> input;
 
@@ -53,15 +53,11 @@ int main() {
 			exit(0);
 	}
 
-	FixedPoint d = -1.3;
-	FixedPoint b = 5.1;
-	FixedPoint c = b + d;
+	IntDecimal d = -1.3;
+	IntDecimal b = 5.1;
+	IntDecimal c = b + d;
 
-	//float q = -123.123;
-	//float w;
-	//float e = modf(q,&w);
 
-	//std::cout << w << ' ' << e << '\n';
 
 	std::cout << d.printSign() << d.getIntegerPart() << '.' << d.getDecimalPart() << '\n';
 	std::cout << b.printSign() << b.getIntegerPart() << '.' << b.getDecimalPart() << '\n';
