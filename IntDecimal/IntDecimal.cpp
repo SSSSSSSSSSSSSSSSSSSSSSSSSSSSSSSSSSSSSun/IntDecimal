@@ -141,7 +141,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 
 
 
-// double로 생성 (사용을 권장하지 않음.)
+// double로 생성 (사용을 권장하지 않음)
 // (유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
 // (단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 // (단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
@@ -225,7 +225,7 @@ IntDecimal::IntDecimal(double doubleNumber) {
 }
 
 // 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
-IntDecimal::IntDecimal(int& inputIntegerPart, const unsigned int& inputDecimalPart){
+IntDecimal::IntDecimal(const int& inputIntegerPart, const unsigned int& inputDecimalPart){
 	if (inputIntegerPart >= 0) {
 		isPositive = true;
 		integerPart = static_cast<unsigned int>(inputIntegerPart);
@@ -529,11 +529,263 @@ IntDecimal IntDecimal::operator+(const IntDecimal& data) const {
 }
 
 //============
+//-
+//============
+
+IntDecimal IntDecimal::operator-(const short& data) const {
+	return IntDecimal(*this + (-data));
+}
+IntDecimal IntDecimal::operator-(const unsigned short& data) const {
+	short signedDate = static_cast<short>(data);
+
+	return IntDecimal(*this + (-signedDate));
+}
+IntDecimal IntDecimal::operator-(const int& data) const {
+	return IntDecimal(*this + (-data));
+}
+IntDecimal IntDecimal::operator-(const unsigned int& data) const {
+	int signedDate = static_cast<int>(data);
+
+	return IntDecimal(*this + (-signedDate));
+}
+IntDecimal IntDecimal::operator-(const IntDecimal& data) const {
+	return IntDecimal(*this + (-data));
+}
+
+
+//============
+//*
+//============
+
+// 정수부 오버플로우시(>INT_MAX*2+1) INT_MIN-0.999999 리턴
+IntDecimal IntDecimal::operator*(const short& data) const {
+	// 0
+	if (*this == 0 || data == 0)
+		return IntDecimal();
+
+	bool dataIsPositive;
+
+	if (data >= 0)
+		dataIsPositive = true;
+	else
+		dataIsPositive = false;
+
+	unsigned int carry = 0;
+	unsigned int newDecimalPart = 0;
+
+	// 소수부가 0이 아닐때만 작동함
+	if (decimalPart) {
+		unsigned int decimalDigits[6];
+		for (int i = 0;i < 6;i++) {
+			decimalDigits[i] = decimalPart % static_cast<int>(pow(10, 6 - i)) / static_cast<int>(pow(10, 6 - i - 1));
+
+			// 자리수가 0이 아닐때만 작동함
+			if (decimalDigits[i]) {
+				decimalDigits[i] *= abs(data);
+			
+				carry += decimalDigits[i] / static_cast<int>(pow(10, 1 + i));
+				newDecimalPart += decimalDigits[i] % static_cast<int>(pow(10, 1 + i)) * static_cast<int>(pow(10, 6 - i - 1));
+			}
+		}
+
+		if (newDecimalPart >= 1000000u) {
+			carry += newDecimalPart / 1000000;
+			newDecimalPart %= 1000000;
+		}
+	}
+
+	unsigned int newIntegerPart = 0;
+
+	// 정수부가 0이 아닐때만 작동함
+	if (integerPart) {
+		// 오버플로우 검사
+		if (integerPart > (INT_MAX * 2u + 1u - carry) / abs(data) ){
+			return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+		}
+		newIntegerPart = integerPart * abs(data);
+
+		
+	}
+
+	newIntegerPart += carry;
+
+	return IntDecimal(newIntegerPart, newDecimalPart, not (isPositive ^ dataIsPositive));
+
+}
+
+// 정수부 오버플로우시(>INT_MAX*2+1) INT_MIN-0.999999 리턴
+IntDecimal IntDecimal::operator*(const unsigned short& data) const {
+	// 0
+	if (*this == 0 || data == 0)
+		return IntDecimal();
+
+	unsigned int carry = 0;
+	unsigned int newDecimalPart = 0;
+
+	// 소수부가 0이 아닐때만 작동함
+	if (decimalPart) {
+		unsigned int decimalDigits[6];
+		for (int i = 0;i < 6;i++) {
+			decimalDigits[i] = decimalPart % static_cast<int>(pow(10, 6 - i)) / static_cast<int>(pow(10, 6 - i - 1));
+
+			// 자리수가 0이 아닐때만 작동함
+			if (decimalDigits[i]) {
+				decimalDigits[i] *= data;
+
+				carry += decimalDigits[i] / static_cast<int>(pow(10, 1 + i));
+				newDecimalPart += decimalDigits[i] % static_cast<int>(pow(10, 1 + i)) * static_cast<int>(pow(10, 6 - i - 1));
+			}
+		}
+
+		if (newDecimalPart >= 1000000u) {
+			carry += newDecimalPart / 1000000;
+			newDecimalPart %= 1000000;
+		}
+	}
+
+	unsigned int newIntegerPart = 0;
+
+	// 정수부가 0이 아닐때만 작동함
+	if (integerPart) {
+		// 오버플로우 검사
+		if (integerPart > (INT_MAX * 2u + 1u - carry) / data) {
+			return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+		}
+		newIntegerPart = integerPart * data;
+
+
+	}
+
+	newIntegerPart += carry;
+
+	return IntDecimal(newIntegerPart, newDecimalPart, isPositive);
+
+}
+
+// 정수부 오버플로우시(>INT_MAX*2+1) INT_MIN-0.999999 리턴
+IntDecimal IntDecimal::operator*(const int& data) const {
+	// 0
+	if (*this == 0 || data == 0)
+		return IntDecimal();
+
+	bool dataIsPositive;
+
+	if (data >= 0)
+		dataIsPositive = true;
+	else
+		dataIsPositive = false;
+
+	unsigned int carry = 0;
+	unsigned int newDecimalPart = 0;
+
+	// 소수부가 0이 아닐때만 작동함
+	if (decimalPart) {
+
+		unsigned int decimalDigits[6];
+		for (int i = 0;i < 6;i++) {
+			decimalDigits[i] = decimalPart % static_cast<int>(pow(10, 6 - i)) / static_cast<int>(pow(10, 6 - i - 1));
+
+			// 오버플로우 검사
+			if (decimalDigits[i] > (INT_MAX * 2u + 1u) / data) {
+				return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+			}
+
+			// 자리수가 0이 아닐때만 작동함
+			if (decimalDigits[i]) {
+				decimalDigits[i] *= abs(data);
+
+				carry += decimalDigits[i] / static_cast<int>(pow(10, 1 + i));
+				newDecimalPart += decimalDigits[i] % static_cast<int>(pow(10, 1 + i)) * static_cast<int>(pow(10, 6 - i - 1));
+			}
+		}
+
+		if (newDecimalPart >= 1000000u) {
+			carry += newDecimalPart / 1000000;
+			newDecimalPart %= 1000000;
+		}
+	}
+
+	unsigned int newIntegerPart = 0;
+
+	// 정수부가 0이 아닐때만 작동함
+	if (integerPart) {
+		// 오버플로우 검사
+		if (integerPart > (INT_MAX * 2u + 1u - carry) / abs(data)) {
+			return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+		}
+		newIntegerPart = integerPart * abs(data);
+
+
+	}
+
+	newIntegerPart += carry;
+
+	return IntDecimal(newIntegerPart, newDecimalPart, not (isPositive ^ dataIsPositive));
+}
+
+// 정수부 오버플로우시(>INT_MAX*2+1) INT_MIN-0.999999 리턴
+IntDecimal IntDecimal::operator*(const unsigned int& data) const {
+	// 0
+	if (*this == 0 || data == 0)
+		return IntDecimal();
+
+	unsigned int carry = 0;
+	unsigned int newDecimalPart = 0;
+
+	// 소수부가 0이 아닐때만 작동함
+	if (decimalPart) {
+		unsigned int decimalDigits[6];
+		for (int i = 0;i < 6;i++) {
+			decimalDigits[i] = decimalPart % static_cast<int>(pow(10, 6 - i)) / static_cast<int>(pow(10, 6 - i - 1));
+
+			// 오버플로우 검사
+			if (decimalDigits[i] > (INT_MAX * 2u + 1u) / data) {
+				return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+			}
+
+			// 자리수가 0이 아닐때만 작동함
+			if (decimalDigits[i]) {
+				decimalDigits[i] *= data;
+
+				carry += decimalDigits[i] / static_cast<int>(pow(10, 1 + i));
+				newDecimalPart += decimalDigits[i] % static_cast<int>(pow(10, 1 + i)) * static_cast<int>(pow(10, 6 - i - 1));
+			}
+		}
+
+		if (newDecimalPart >= 1000000u) {
+			carry += newDecimalPart / 1000000;
+			newDecimalPart %= 1000000;
+		}
+	}
+
+	unsigned int newIntegerPart = 0;
+
+	// 정수부가 0이 아닐때만 작동함
+	if (integerPart) {
+		// 오버플로우 검사
+		if (integerPart > (INT_MAX * 2u + 1u - carry) / data) {
+			return IntDecimal(INT_MAX * 2u + 1u, 999999, false);
+		}
+		newIntegerPart = integerPart * data;
+
+
+	}
+
+	newIntegerPart += carry;
+
+	return IntDecimal(newIntegerPart, newDecimalPart, isPositive);
+
+}
+
+// 정수부 오버플로우시(>INT_MAX*2+1) INT_MIN-0.999999 리턴
+//IntDecimal IntDecimal::operator*(const IntDecimal& data) const {}
+
+//============
 //==
 //============
 
 bool IntDecimal::operator==(const short& data) const {
-	if (not decimalPart)
+	if (decimalPart)
 		return false;
 
 	if (isPositive && data < 0)
@@ -547,7 +799,7 @@ bool IntDecimal::operator==(const short& data) const {
 	return false;
 }
 bool IntDecimal::operator==(const unsigned short& data) const {
-	if (not decimalPart)
+	if (decimalPart)
 		return false;
 
 	if (not isPositive && data > 0)
@@ -558,7 +810,7 @@ bool IntDecimal::operator==(const unsigned short& data) const {
 	return false;
 }
 bool IntDecimal::operator==(const int& data) const {
-	if (not decimalPart)
+	if (decimalPart)
 		return false;
 
 	if (isPositive && data < 0)
@@ -573,7 +825,7 @@ bool IntDecimal::operator==(const int& data) const {
 }
 
 bool IntDecimal::operator==(const unsigned int& data) const {
-	if (not decimalPart)
+	if (decimalPart)
 		return false;
 
 	if (not isPositive && data > 0)
@@ -1131,7 +1383,7 @@ IntDecimal& IntDecimal::operator=(const unsigned int& data) {
 }
 
 //(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
-//(사용을 권장하지 않음.)
+//(사용을 권장하지 않음)
 //(단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
 //(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
 
@@ -1216,7 +1468,7 @@ IntDecimal& IntDecimal::operator=(float data) {
 }
 
 //(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
-//(사용을 권장하지 않음.)
+//(사용을 권장하지 않음)
 //(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 //(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 IntDecimal& IntDecimal::operator=(double data) {

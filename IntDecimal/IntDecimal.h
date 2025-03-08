@@ -17,17 +17,19 @@ public:
 	IntDecimal(const unsigned short&);	// unsigned short로 생성	(0~65535)
 	IntDecimal(const int&);				// int로 생성				(~2147483648~2147483647)
 	IntDecimal(const unsigned int&);	// unsigned int로 생성		(0~4294967295)
-	IntDecimal(int&, const unsigned int&);	// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
+	IntDecimal(const int&, const unsigned int&);	// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
 	IntDecimal(const unsigned int&, const unsigned int&, const bool&);
 	// 정수부, 소수부, 부호로 생성 (소수부 999999 초과시 0으로 계산)
 	
 	IntDecimal(float);
 	// float로 생성				(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//							(권장하지 않음)
 	//							(단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
 	//							(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
 	
 	IntDecimal(double);
 	// double로 생성			(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//							(권장하지 않음)
 	//							(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 	//							(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 
@@ -51,6 +53,7 @@ public:
 	IntDecimal operator-(const unsigned int&) const;
 	IntDecimal operator-(const IntDecimal&) const;
 
+	// 정수부나 지수부 오버플로우시 INT_MIN-0.999999 리턴
 	IntDecimal operator*(const short&) const;
 	IntDecimal operator*(const unsigned short&) const;
 	IntDecimal operator*(const int&) const;
@@ -124,11 +127,13 @@ public:
 
 	IntDecimal& operator=(float);
 	//(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//(권장하지 않음)
 	//(단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
 	//(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
 
 	IntDecimal& operator=(double);
 	//(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//(권장하지 않음)
 	//(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 	//(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 

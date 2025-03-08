@@ -53,13 +53,15 @@ int main() {
 			exit(0);
 	}
 
-	IntDecimal d = -1.3;
-	IntDecimal b = 5.1;
-	IntDecimal c = b + d;
+	int d = INT_MAX;
+	IntDecimal b(0,300000);
+	IntDecimal c = b * d;
 
+	short k = 1;
 
+	a* k;
 
-	std::cout << d.printSign() << d.getIntegerPart() << '.' << d.getDecimalPart() << '\n';
+	//std::cout << d.printSign() << d.getIntegerPart() << '.' << d.getDecimalPart() << '\n';
 	std::cout << b.printSign() << b.getIntegerPart() << '.' << b.getDecimalPart() << '\n';
 	std::cout << c.printSign() << c.getIntegerPart() << '.' << c.getDecimalPart() << '\n';
 
@@ -67,6 +69,6 @@ int main() {
 	std::cout << "a.toInt() : " << a.toInt() << '\n';
 	std::cout << "a.toDouble() : " << a.toDouble() << '\n';
 	std::cout << "a.toFloat() : " << a.toFloat() << '\n';
-
+	std::cout << (a==0) << '\n';
 
 }
