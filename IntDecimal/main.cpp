@@ -53,11 +53,17 @@ int main() {
 			exit(0);
 	}
 
-	short asdf = -123;
-	IntDecimal b = asdf;
-	IntDecimal c(+122);
+	IntDecimal d = -1.3;
+	IntDecimal b = 5.1;
+	IntDecimal c = b + d;
+
+
+
+	std::cout << d.printSign() << d.getIntegerPart() << '.' << d.getDecimalPart() << '\n';
+	std::cout << b.printSign() << b.getIntegerPart() << '.' << b.getDecimalPart() << '\n';
+	std::cout << c.printSign() << c.getIntegerPart() << '.' << c.getDecimalPart() << '\n';
+
 	std::cout << a.printSign() << a.getIntegerPart() << '.' << a.getDecimalPart() << '\n';
-	std::cout << (b<=c) << '\n';
 	std::cout << "a.toInt() : " << a.toInt() << '\n';
 	std::cout << "a.toDouble() : " << a.toDouble() << '\n';
 	std::cout << "a.toFloat() : " << a.toFloat() << '\n';

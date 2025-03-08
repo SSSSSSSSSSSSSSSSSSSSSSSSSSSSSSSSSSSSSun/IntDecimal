@@ -18,6 +18,8 @@ public:
 	IntDecimal(const int&);				// int로 생성				(~2147483648~2147483647)
 	IntDecimal(const unsigned int&);	// unsigned int로 생성		(0~4294967295)
 	IntDecimal(int&, const unsigned int&);	// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
+	IntDecimal(const unsigned int&, const unsigned int&, const bool&);
+	// 정수부, 소수부, 부호로 생성 (소수부 999999 초과시 0으로 계산)
 	
 	IntDecimal(float);
 	// float로 생성				(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
@@ -35,86 +37,85 @@ public:
 	//연산자, float, double과의 연산자 사용 안함 (정확도 낮음)
 	//=====================================
 
-	IntDecimal operator+(const short&);
-	IntDecimal operator+(const unsigned short&);
-	IntDecimal operator+(const int&);
-	IntDecimal operator+(const unsigned int&);
-	IntDecimal operator+(const IntDecimal&);
+	IntDecimal operator-() const;
 
-	IntDecimal operator-(const short&);
-	IntDecimal operator-(const unsigned short&);
-	IntDecimal operator-(const int&);
-	IntDecimal operator-(const unsigned int&);
-	IntDecimal operator-(const IntDecimal&);
+	IntDecimal operator+(const short&) const;
+	IntDecimal operator+(const unsigned short&) const;
+	IntDecimal operator+(const int&) const;
+	IntDecimal operator+(const unsigned int&) const;
+	IntDecimal operator+(const IntDecimal&) const;
 
-	IntDecimal operator*(const short&);
-	IntDecimal operator*(const unsigned short&);
-	IntDecimal operator*(const int&);
-	IntDecimal operator*(const unsigned int&);
-	IntDecimal operator*(const IntDecimal&);
+	IntDecimal operator-(const short&) const;
+	IntDecimal operator-(const unsigned short&) const;
+	IntDecimal operator-(const int&) const;
+	IntDecimal operator-(const unsigned int&) const;
+	IntDecimal operator-(const IntDecimal&) const;
 
-	IntDecimal operator/(const short&);
-	IntDecimal operator/(const unsigned short&);
-	IntDecimal operator/(const int&);
-	IntDecimal operator/(const unsigned int&);
-	IntDecimal operator/(const IntDecimal&);
+	IntDecimal operator*(const short&) const;
+	IntDecimal operator*(const unsigned short&) const;
+	IntDecimal operator*(const int&) const;
+	IntDecimal operator*(const unsigned int&) const;
+	IntDecimal operator*(const IntDecimal&) const;
 
-	IntDecimal& operator+=(const short&);
-	IntDecimal& operator+=(const unsigned short&);
-	IntDecimal& operator+=(const int&);
-	IntDecimal& operator+=(const unsigned int&);
-	IntDecimal& operator+=(const IntDecimal&);
+	IntDecimal operator/(const short&) const;
+	IntDecimal operator/(const unsigned short&) const;
+	IntDecimal operator/(const int&) const;
+	IntDecimal operator/(const unsigned int&) const;
+	IntDecimal operator/(const IntDecimal&) const;
 
-	IntDecimal& operator-=(const short&);
-	IntDecimal& operator-=(const unsigned short&);
-	IntDecimal& operator-=(const int&);
-	IntDecimal& operator-=(const unsigned int&);
-	IntDecimal& operator-=(const IntDecimal&);
+	IntDecimal& operator+=(const short&) const;
+	IntDecimal& operator+=(const unsigned short&) const;
+	IntDecimal& operator+=(const int&) const;
+	IntDecimal& operator+=(const unsigned int&) const;
+	IntDecimal& operator+=(const IntDecimal&) const;
 
-	IntDecimal& operator*=(const short&);
-	IntDecimal& operator*=(const unsigned short&);
-	IntDecimal& operator*=(const int&);
-	IntDecimal& operator*=(const unsigned int&);
-	IntDecimal& operator*=(const IntDecimal&);
+	IntDecimal& operator-=(const short&) const;
+	IntDecimal& operator-=(const unsigned short&) const;
+	IntDecimal& operator-=(const int&) const;
+	IntDecimal& operator-=(const unsigned int&) const;
+	IntDecimal& operator-=(const IntDecimal&) const;
 
-	IntDecimal& operator/=(const short&);
-	IntDecimal& operator/=(const unsigned short&);
-	IntDecimal& operator/=(const int&);
-	IntDecimal& operator/=(const unsigned int&);
+	IntDecimal& operator*=(const short&) const;
+	IntDecimal& operator*=(const unsigned short&) const;
+	IntDecimal& operator*=(const int&) const;
+	IntDecimal& operator*=(const unsigned int&) const;
+	IntDecimal& operator*=(const IntDecimal&) const;
 
-	IntDecimal& operator/=(const float&);
-	IntDecimal& operator/=(const double&);
-	IntDecimal& operator/=(const IntDecimal&);
+	IntDecimal& operator/=(const short&) const;
+	IntDecimal& operator/=(const unsigned short&) const;
+	IntDecimal& operator/=(const int&) const;
+	IntDecimal& operator/=(const unsigned int&) const;
+	IntDecimal& operator/=(const IntDecimal&) const;
 
-	bool operator==(const short&);
-	bool operator==(const unsigned short&);
-	bool operator==(const int&);
-	bool operator==(const unsigned int&);
-	bool operator==(const IntDecimal&);
+	bool operator==(const short&) const;
+	bool operator==(const unsigned short&) const;
+	bool operator==(const int&) const;
+	bool operator==(const unsigned int&) const;
+	bool operator==(const IntDecimal&) const;
 
-	bool operator>=(const short&);
-	bool operator>=(const unsigned short&);
-	bool operator>=(const int&);
-	bool operator>=(const unsigned int&);
-	bool operator>=(const IntDecimal&);
+	bool operator>=(const short&) const;
+	bool operator>=(const unsigned short&) const;
+	bool operator>=(const int&) const;
+	bool operator>=(const unsigned int&) const;
+	bool operator>=(const IntDecimal&) const;
 
-	bool operator<=(const short&);
-	bool operator<=(const unsigned short&);
-	bool operator<=(const int&);
-	bool operator<=(const unsigned int&);
-	bool operator<=(const IntDecimal&);
+	bool operator<=(const short&) const;
+	bool operator<=(const unsigned short&) const;
+	bool operator<=(const int&) const;
+	bool operator<=(const unsigned int&) const;
+	bool operator<=(const IntDecimal&) const;
 
-	bool operator>(const short&);
-	bool operator>(const unsigned short&);
-	bool operator>(const int&);
-	bool operator>(const unsigned int&);
-	bool operator>(const IntDecimal&);
+	bool operator>(const short&) const;
+	bool operator>(const unsigned short&) const;
+	bool operator>(const int&) const;
+	bool operator>(const unsigned int&) const;
+	bool operator>(const IntDecimal&) const;
 
-	bool operator<(const short&);
-	bool operator<(const unsigned short&);
-	bool operator<(const int&);
-	bool operator<(const unsigned int&);
-	bool operator<(const IntDecimal&);
+	bool operator<(const short&) const;
+	bool operator<(const unsigned short&) const;
+	bool operator<(const int&) const;
+	bool operator<(const unsigned int&) const;
+	bool operator<(const IntDecimal&) const;
 
 	IntDecimal& operator=(const short&);
 	IntDecimal& operator=(const unsigned short&);
@@ -133,22 +134,23 @@ public:
 
 	IntDecimal& operator=(const IntDecimal&);
 
-	bool operator!();
+	bool operator!() const;
 
 	//=====================================
 	//그 외
 	//=====================================
 
-	int toInt();						// Int로 변환			(소수점 이하 절삭)
-	unsigned int toUnsignedInt();		// UnsignedInt로 변환	(소수점 이하/부호(-) 절삭)
-	float toFloat();					// float로 변환
-	double toDouble();					// Double로 변환
+	int toInt()  const;						// Int로 변환			(소수점 이하 절삭)
+	unsigned int toUnsignedInt() const;		// UnsignedInt로 변환	(소수점 이하/부호(-) 절삭)
+	float toFloat() const;					// float로 변환
+	double toDouble() const;				// Double로 변환
 
+	IntDecimal abc() const;					// 절대값 전달
 
-	unsigned int getIntegerPart(); 	// 정수부 전달
-	unsigned int getDecimalPart(); 	// 소수부 전달
-	bool getSign();			// 부호 전달
-	char printSign();		// 부호 출력
+	unsigned int getIntegerPart() const; 	// 정수부 전달
+	unsigned int getDecimalPart() const; 	// 소수부 전달
+	bool getSign() const;					// 부호 전달
+	char printSign() const			;		// 부호 출력
 
 
 	

@@ -1,6 +1,6 @@
 #include "IntDecimal.h"
 #include <cmath>
-
+#include <iostream>
 
 //=====================================
 //생성자
@@ -55,7 +55,7 @@ IntDecimal::IntDecimal(const unsigned int& integer)
 }
 
 
-// float로 생성	
+// float로 생성	(사용을 권장하지 않음)
 // (유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
 // (단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
 // (단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
@@ -141,7 +141,7 @@ IntDecimal::IntDecimal(float floatNumber) {
 
 
 
-// double로 생성
+// double로 생성 (사용을 권장하지 않음.)
 // (유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
 // (단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 // (단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
@@ -179,6 +179,7 @@ IntDecimal::IntDecimal(double doubleNumber) {
 		doubleNumber *= -1;
 	}
 
+	
 	short numDigits = static_cast<short>(log10(doubleNumber));
 
 	// 절대값 10 이상 인 수
@@ -210,7 +211,6 @@ IntDecimal::IntDecimal(double doubleNumber) {
 		decimalPart = integerPart % 100000;
 		integerPart /= 100000;
 		decimalPart *= 10;
-
 		return;
 	}
 
@@ -221,7 +221,7 @@ IntDecimal::IntDecimal(double doubleNumber) {
 
 	if (decimalPart == 0)	// 0일때 부호를 +로 바꿔줌
 		isPositive = true;
-
+	
 }
 
 // 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
@@ -241,6 +241,10 @@ IntDecimal::IntDecimal(int& inputIntegerPart, const unsigned int& inputDecimalPa
 
 }
 
+// 정수부, 소수부, 부호로 생성 (소수부 999999 초과시 0으로 계산)
+IntDecimal::IntDecimal(const unsigned int& inputIntegerPart, const unsigned int& inputDecimalPart, const bool& inputIsPositive)
+	: integerPart(inputIntegerPart), decimalPart(inputDecimalPart), isPositive(inputIsPositive)
+{}
 
 // 복사생성자
 IntDecimal::IntDecimal(const IntDecimal& original)
@@ -254,32 +258,281 @@ IntDecimal::IntDecimal(const IntDecimal& original)
 //=====================================
 
 //============
+//단항 연산자 -
+//============
+IntDecimal IntDecimal::operator-() const {
+	return IntDecimal(this->integerPart, this->decimalPart, not (this->isPositive));
+}
+
+
+//============
 //+
 //============
  
- 
-//IntDecimal IntDecimal::operator+(const short& data) {
-//	int newIntegerPart;
-//	unsigned int newDecimalPart;
-//
-//	if (data < 0) {
-//
-//	}
-//}
-//
-//IntDecimal IntDecimal::operator+(const unsigned short& data) {
-//
-//}
-//IntDecimal IntDecimal::operator+(const int& data) {}
-//IntDecimal IntDecimal::operator+(const unsigned int& data) {}
+IntDecimal IntDecimal::operator+(const short& data) const {
+	unsigned int newIntegerPart;
+	unsigned int newDecimalPart;
+	bool dataIsPositive;
 
-//IntDecimal IntDecimal::operator+(const IntDecimal& data) {}
+	if (data >= 0)
+		dataIsPositive = true;
+	else
+		dataIsPositive = false;
+
+	// + + or - -
+	if (isPositive == dataIsPositive) {
+		if (isPositive) {
+			newIntegerPart = integerPart + static_cast<unsigned int>(data);
+			return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+		}
+		else {
+			newIntegerPart = integerPart + static_cast<unsigned int>(-data);
+			return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+		}
+	}
+
+	// 합쳐서 0
+	if (-(*this) == data) {
+		return IntDecimal();
+	}
+	
+	// + -
+	if (isPositive) {
+		// this의 절대값이 더 클때
+		if (*this > -data) {
+			newIntegerPart = integerPart - static_cast<unsigned int>(-data);
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = static_cast<unsigned int>(-data) - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+	// - +
+	else {
+		// data의 절대값이 더 클때
+		if (-(*this) > data) {
+			newIntegerPart = integerPart - static_cast<unsigned int>(data);
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = static_cast<unsigned int>(data) - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+
+}
+
+IntDecimal IntDecimal::operator+(const unsigned short& data) const {
+	unsigned int newIntegerPart;
+	unsigned int newDecimalPart;
+	bool dataIsPositive = true;
+
+	// + +
+	if (isPositive == dataIsPositive) {
+		newIntegerPart = integerPart + data;
+		return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+	}
+
+	// 합쳐서 0
+	if (-(*this) == data) {
+		return IntDecimal();
+	}
+	// - +
+	else {
+		// data의 절대값이 더 클때
+		if (-(*this) > data) {
+			newIntegerPart = integerPart - data;
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = data - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+}
+
+
+IntDecimal IntDecimal::operator+(const int& data) const {
+	unsigned int newIntegerPart;
+	unsigned int newDecimalPart;
+	bool dataIsPositive;
+
+	if (data >= 0)
+		dataIsPositive = true;
+	else
+		dataIsPositive = false;
+
+	// + + or - -
+	if (isPositive == dataIsPositive) {
+		if (isPositive) {
+			newIntegerPart = integerPart + static_cast<unsigned int>(data);
+			return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+		}
+		else {
+			newIntegerPart = integerPart + static_cast<unsigned int>(-data);
+			return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+		}
+	}
+
+	// 합쳐서 0
+	if (-(*this) == data) {
+		return IntDecimal();
+	}
+
+	// + -
+	if (isPositive) {
+		// this의 절대값이 더 클때
+		if (*this > -data) {
+			newIntegerPart = integerPart - static_cast<unsigned int>(-data);
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = static_cast<unsigned int>(-data) - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+	// - +
+	else {
+		// data의 절대값이 더 클때
+		if (-(*this) > data) {
+			newIntegerPart = integerPart - static_cast<unsigned int>(data);
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = static_cast<unsigned int>(data) - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+}
+IntDecimal IntDecimal::operator+(const unsigned int& data) const {
+	unsigned int newIntegerPart;
+	unsigned int newDecimalPart;
+	bool dataIsPositive = true;
+
+	// + +
+	if (isPositive == dataIsPositive) {
+		newIntegerPart = integerPart + data;
+		return IntDecimal(newIntegerPart, decimalPart, dataIsPositive);
+	}
+
+	// 합쳐서 0
+	if (-(*this) == data) {
+		return IntDecimal();
+	}
+	// - +
+	else {
+		// data의 절대값이 더 클때
+		if (-(*this) > data) {
+			newIntegerPart = integerPart - data;
+			return IntDecimal(newIntegerPart, decimalPart, isPositive);
+		}
+		else {
+			newIntegerPart = data - integerPart;
+
+			// 소수부 계산, // 0은 data의 소수부를 의미 (.000000)
+			if (decimalPart > 0) {
+				newIntegerPart--;
+				newDecimalPart = 0 + 1000000 - decimalPart;
+			}
+			return IntDecimal(newIntegerPart, newDecimalPart, dataIsPositive);
+		}
+	}
+}
+
+IntDecimal IntDecimal::operator+(const IntDecimal& data) const {
+	unsigned int newIntegerPart;
+	unsigned int newDecimalPart;
+
+	// + + or - -
+	if (isPositive == data.isPositive) {
+		newIntegerPart = integerPart + data.integerPart;
+		newDecimalPart = decimalPart + data.decimalPart;
+
+		if (newDecimalPart >= 1000000) {
+			newIntegerPart++;
+			newDecimalPart -= 1000000;
+		}
+
+		return IntDecimal(newIntegerPart, newDecimalPart, isPositive);
+	}
+
+	// 합쳐서 0
+	if (-(*this) == data) {
+		return IntDecimal();
+	}
+
+	// 부호가 다를때
+	
+	if (this->abc() > data.abc()) {		// this의 절대값이 더 클때
+		newIntegerPart = integerPart - data.integerPart;
+
+		// 소수부 계산
+		if (decimalPart >= data.decimalPart) {
+			newDecimalPart = decimalPart - data.decimalPart;
+		}
+		else {
+			newIntegerPart--;
+			newDecimalPart = (decimalPart + 1000000) - data.decimalPart;
+		}
+		std::cout << 9;
+		return IntDecimal(newIntegerPart, newDecimalPart, isPositive);
+	}
+	else {
+		newIntegerPart = data.integerPart - integerPart;
+
+		// 소수부 계산
+		if (data.decimalPart >= decimalPart) {
+			newDecimalPart = data.decimalPart - decimalPart;
+		}
+		else {
+			newIntegerPart--;
+			newDecimalPart = (data.decimalPart + 1000000) - decimalPart;
+		}
+
+		return IntDecimal(newIntegerPart, newDecimalPart, data.isPositive);
+
+	}
+
+
+
+}
 
 //============
 //==
 //============
 
-bool IntDecimal::operator==(const short& data) {
+bool IntDecimal::operator==(const short& data) const {
 	if (not decimalPart)
 		return false;
 
@@ -293,7 +546,7 @@ bool IntDecimal::operator==(const short& data) {
 		return true;
 	return false;
 }
-bool IntDecimal::operator==(const unsigned short& data) {
+bool IntDecimal::operator==(const unsigned short& data) const {
 	if (not decimalPart)
 		return false;
 
@@ -304,7 +557,7 @@ bool IntDecimal::operator==(const unsigned short& data) {
 		return true;
 	return false;
 }
-bool IntDecimal::operator==(const int& data) {
+bool IntDecimal::operator==(const int& data) const {
 	if (not decimalPart)
 		return false;
 
@@ -319,7 +572,7 @@ bool IntDecimal::operator==(const int& data) {
 	return false;
 }
 
-bool IntDecimal::operator==(const unsigned int& data) {
+bool IntDecimal::operator==(const unsigned int& data) const {
 	if (not decimalPart)
 		return false;
 
@@ -330,7 +583,7 @@ bool IntDecimal::operator==(const unsigned int& data) {
 		return true;
 	return false;
 }
-bool IntDecimal::operator==(const IntDecimal& data) {
+bool IntDecimal::operator==(const IntDecimal& data) const {
 	if (not (integerPart == data.integerPart))
 		return false;
 
@@ -351,7 +604,7 @@ bool IntDecimal::operator==(const IntDecimal& data) {
 //>=
 //============
 
-bool IntDecimal::operator>=(const short& data) {
+bool IntDecimal::operator>=(const short& data) const {
 	
 	// 같을때
 	if (*this == data)
@@ -378,7 +631,7 @@ bool IntDecimal::operator>=(const short& data) {
 	return true;
 
 }
-bool IntDecimal::operator>=(const unsigned short& data) {
+bool IntDecimal::operator>=(const unsigned short& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -393,7 +646,7 @@ bool IntDecimal::operator>=(const unsigned short& data) {
 	return false;
 }
 
-bool IntDecimal::operator>=(const int& data) {
+bool IntDecimal::operator>=(const int& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -419,7 +672,7 @@ bool IntDecimal::operator>=(const int& data) {
 	return true;
 }
 
-bool IntDecimal::operator>=(const unsigned int& data){
+bool IntDecimal::operator>=(const unsigned int& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -434,7 +687,7 @@ bool IntDecimal::operator>=(const unsigned int& data){
 	return false;
 }
 
-bool IntDecimal::operator>=(const IntDecimal& data) {
+bool IntDecimal::operator>=(const IntDecimal& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -474,7 +727,7 @@ bool IntDecimal::operator>=(const IntDecimal& data) {
 //<=
 //============
 
-bool IntDecimal::operator<=(const short& data) {
+bool IntDecimal::operator<=(const short& data) const {
 
 	// 같을때
 	if (*this == data)
@@ -501,7 +754,7 @@ bool IntDecimal::operator<=(const short& data) {
 	return false;
 
 }
-bool IntDecimal::operator<= (const unsigned short& data) {
+bool IntDecimal::operator<= (const unsigned short& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -516,7 +769,7 @@ bool IntDecimal::operator<= (const unsigned short& data) {
 	return true;
 }
 
-bool IntDecimal::operator<= (const int& data) {
+bool IntDecimal::operator<= (const int& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -542,7 +795,7 @@ bool IntDecimal::operator<= (const int& data) {
 	return false;
 }
 
-bool IntDecimal::operator<= (const unsigned int& data) {
+bool IntDecimal::operator<= (const unsigned int& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -557,7 +810,7 @@ bool IntDecimal::operator<= (const unsigned int& data) {
 	return true;
 }
 
-bool IntDecimal::operator<=(const IntDecimal& data) {
+bool IntDecimal::operator<=(const IntDecimal& data) const {
 	// 같을때
 	if (*this == data)
 		return true;
@@ -597,7 +850,7 @@ bool IntDecimal::operator<=(const IntDecimal& data) {
 //>
 //============
 
-bool IntDecimal::operator>(const short& data) {
+bool IntDecimal::operator>(const short& data) const {
 
 	// 같을때
 	if (*this == data)
@@ -624,7 +877,7 @@ bool IntDecimal::operator>(const short& data) {
 	return true;
 
 }
-bool IntDecimal::operator>(const unsigned short& data) {
+bool IntDecimal::operator>(const unsigned short& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -639,7 +892,7 @@ bool IntDecimal::operator>(const unsigned short& data) {
 	return false;
 }
 
-bool IntDecimal::operator>(const int& data) {
+bool IntDecimal::operator>(const int& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -665,7 +918,7 @@ bool IntDecimal::operator>(const int& data) {
 	return true;
 }
 
-bool IntDecimal::operator>(const unsigned int& data) {
+bool IntDecimal::operator>(const unsigned int& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -680,7 +933,7 @@ bool IntDecimal::operator>(const unsigned int& data) {
 	return false;
 }
 
-bool IntDecimal::operator>(const IntDecimal& data) {
+bool IntDecimal::operator>(const IntDecimal& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -720,7 +973,7 @@ bool IntDecimal::operator>(const IntDecimal& data) {
 //<
 //============
 
-bool IntDecimal::operator<(const short& data) {
+bool IntDecimal::operator<(const short& data) const {
 
 	// 같을때
 	if (*this == data)
@@ -747,7 +1000,7 @@ bool IntDecimal::operator<(const short& data) {
 	return false;
 
 }
-bool IntDecimal::operator< (const unsigned short& data) {
+bool IntDecimal::operator< (const unsigned short& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -762,7 +1015,7 @@ bool IntDecimal::operator< (const unsigned short& data) {
 	return true;
 }
 
-bool IntDecimal::operator< (const int& data) {
+bool IntDecimal::operator< (const int& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -788,7 +1041,7 @@ bool IntDecimal::operator< (const int& data) {
 	return false;
 }
 
-bool IntDecimal::operator< (const unsigned int& data) {
+bool IntDecimal::operator< (const unsigned int& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -803,7 +1056,7 @@ bool IntDecimal::operator< (const unsigned int& data) {
 	return true;
 }
 
-bool IntDecimal::operator<(const IntDecimal& data) {
+bool IntDecimal::operator<(const IntDecimal& data) const {
 	// 같을때
 	if (*this == data)
 		return false;
@@ -1047,7 +1300,7 @@ IntDecimal& IntDecimal::operator=(const IntDecimal& data) {
 
 
 
-bool IntDecimal::operator!() {
+bool IntDecimal::operator!() const {
 	if (integerPart)
 		return true;
 	if (decimalPart)
@@ -1060,7 +1313,7 @@ bool IntDecimal::operator!() {
 
 
 // Int로 변환				(소수점 이하 절삭)
-int IntDecimal::toInt() {
+int IntDecimal::toInt() const {
 	int toIntResult = integerPart;
 	if (not isPositive)
 		toIntResult *= -1;
@@ -1069,13 +1322,13 @@ int IntDecimal::toInt() {
 }
 
 // UnsignedInt로 변환		(소수점 이하/부호(-) 절삭)
-unsigned int IntDecimal::toUnsignedInt() {
+unsigned int IntDecimal::toUnsignedInt() const {
 	unsigned int toIntResult = integerPart;
 	return toIntResult;
 }
 
 // float로 변환
-float IntDecimal::toFloat() {
+float IntDecimal::toFloat() const {
 	float toFloatResult = integerPart + (static_cast<float>(decimalPart) * 0.000001f);
 	if (not isPositive)
 		toFloatResult *= -1;
@@ -1084,7 +1337,7 @@ float IntDecimal::toFloat() {
 }
 
 // Double로 변환
-double IntDecimal::toDouble() {
+double IntDecimal::toDouble() const {
 	double toDoubleResult = integerPart + (static_cast<double>(decimalPart) * 0.000001);
 	if (not isPositive)
 		toDoubleResult *= -1;
@@ -1092,26 +1345,29 @@ double IntDecimal::toDouble() {
 	return toDoubleResult;
 }
 
-
+// 절대값 전달
+IntDecimal IntDecimal::abc() const {
+	return IntDecimal(integerPart, decimalPart, true);
+}
 
 // 정수부 전달
-unsigned int IntDecimal::getIntegerPart() {
+unsigned int IntDecimal::getIntegerPart() const {
 	return integerPart;
 }
 
 
 // 소수부 전달
-unsigned int IntDecimal::getDecimalPart() {
+unsigned int IntDecimal::getDecimalPart() const {
 	return decimalPart;
 }
 
 // 부호 전달
-bool IntDecimal::getSign() {
+bool IntDecimal::getSign() const {
 	return isPositive;
 }
 
 // 부호 출력
-char IntDecimal::printSign() {
+char IntDecimal::printSign() const {
 	if (isPositive)
 		return '+';
 	else
