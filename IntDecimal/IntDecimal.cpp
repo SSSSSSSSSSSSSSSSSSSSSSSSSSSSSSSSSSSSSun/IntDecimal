@@ -49,7 +49,6 @@ IntDecimal::IntDecimal(const int& integer)
 }
 
 
-
 // unsigned int·Î »ý¼º		(0~4294967295)
 IntDecimal::IntDecimal(const unsigned int& integer)
 	: integerPart(integer), decimalPart(0), isPositive(true) {

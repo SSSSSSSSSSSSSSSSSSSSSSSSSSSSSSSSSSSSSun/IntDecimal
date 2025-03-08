@@ -137,7 +137,13 @@ public:
 	bool operator<(const double&);
 	bool operator<(const IntDecimal&);
 
-
+	IntDecimal& operator=(const short&);
+	IntDecimal& operator=(const unsigned short&);
+	IntDecimal& operator=(const int&);
+	IntDecimal& operator=(const unsigned int&);
+	IntDecimal& operator=(const float&);
+	IntDecimal& operator=(const double&);
+	IntDecimal& operator=(const IntDecimal&);
 
 	//=====================================
 	//±× ¿Ü
