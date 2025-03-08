@@ -1,6 +1,10 @@
 #include "IntDecimal.h"
 #include <cmath>
+
+
+//=====================================
 //생성자
+//=====================================
 
 // 0.0
 IntDecimal::IntDecimal()
@@ -44,6 +48,12 @@ IntDecimal::IntDecimal(const int& integer)
 	}
 }
 
+
+
+// unsigned int로 생성		(0~4294967295)
+IntDecimal::IntDecimal(const unsigned int& integer)
+	: integerPart(integer), decimalPart(0), isPositive(true) {
+}
 
 
 // float로 생성				(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
@@ -175,6 +185,30 @@ IntDecimal::IntDecimal(double doubleNumber) {
 IntDecimal::IntDecimal(const IntDecimal& original)
 	: integerPart(original.integerPart), decimalPart(original.decimalPart), isPositive(original.isPositive) {}
 
+
+
+
+//=====================================
+//연산자
+//=====================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//=====================================
+//그 외
+//=====================================
 
 
 // Int로 변환				(소수점 이하 절삭)
