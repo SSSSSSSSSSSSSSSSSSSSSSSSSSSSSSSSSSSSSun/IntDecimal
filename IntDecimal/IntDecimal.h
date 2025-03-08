@@ -25,81 +25,67 @@ public:
 	//							(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
 	
 	IntDecimal(double);
-	// double로 생성			(소수점 7자리 이하 절삭)
+	// double로 생성			(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
 	//							(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
 	//							(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
 
 	IntDecimal(const IntDecimal&);		// 복사생성
 
 	//=====================================
-	//연산자
+	//연산자, float, double과의 연산자 사용 안함 (정확도 낮음)
 	//=====================================
 
 	IntDecimal operator+(const short&);
 	IntDecimal operator+(const unsigned short&);
 	IntDecimal operator+(const int&);
 	IntDecimal operator+(const unsigned int&);
-	IntDecimal operator+(const float&);
-	IntDecimal operator+(const double&);
 	IntDecimal operator+(const IntDecimal&);
 
 	IntDecimal operator-(const short&);
 	IntDecimal operator-(const unsigned short&);
 	IntDecimal operator-(const int&);
 	IntDecimal operator-(const unsigned int&);
-	IntDecimal operator-(const float&);
-	IntDecimal operator-(const double&);
 	IntDecimal operator-(const IntDecimal&);
 
 	IntDecimal operator*(const short&);
 	IntDecimal operator*(const unsigned short&);
 	IntDecimal operator*(const int&);
 	IntDecimal operator*(const unsigned int&);
-	IntDecimal operator*(const float&);
-	IntDecimal operator*(const double&);
 	IntDecimal operator*(const IntDecimal&);
 
 	IntDecimal operator/(const short&);
 	IntDecimal operator/(const unsigned short&);
 	IntDecimal operator/(const int&);
 	IntDecimal operator/(const unsigned int&);
-	IntDecimal operator/(const float&);
-	IntDecimal operator/(const double&);
 	IntDecimal operator/(const IntDecimal&);
 
 	IntDecimal& operator+=(const short&);
 	IntDecimal& operator+=(const unsigned short&);
 	IntDecimal& operator+=(const int&);
 	IntDecimal& operator+=(const unsigned int&);
-	IntDecimal& operator+=(const float&);
-	IntDecimal& operator+=(const double&);
 	IntDecimal& operator+=(const IntDecimal&);
 
 	IntDecimal& operator-=(const short&);
 	IntDecimal& operator-=(const unsigned short&);
 	IntDecimal& operator-=(const int&);
 	IntDecimal& operator-=(const unsigned int&);
-	IntDecimal& operator-=(const float&);
-	IntDecimal& operator-=(const double&);
 	IntDecimal& operator-=(const IntDecimal&);
 
 	IntDecimal& operator*=(const short&);
 	IntDecimal& operator*=(const unsigned short&);
 	IntDecimal& operator*=(const int&);
 	IntDecimal& operator*=(const unsigned int&);
-	IntDecimal& operator*=(const float&);
-	IntDecimal& operator*=(const double&);
 	IntDecimal& operator*=(const IntDecimal&);
 
 	IntDecimal& operator/=(const short&);
 	IntDecimal& operator/=(const unsigned short&);
 	IntDecimal& operator/=(const int&);
 	IntDecimal& operator/=(const unsigned int&);
+
 	IntDecimal& operator/=(const float&);
 	IntDecimal& operator/=(const double&);
 	IntDecimal& operator/=(const IntDecimal&);
 
-	// float, double과의 == 연산자 사용 안함 (정확도 낮음)
 	bool operator==(const short&);
 	bool operator==(const unsigned short&);
 	bool operator==(const int&);
@@ -110,41 +96,44 @@ public:
 	bool operator>=(const unsigned short&);
 	bool operator>=(const int&);
 	bool operator>=(const unsigned int&);
-	bool operator>=(const float&);
-	bool operator>=(const double&);
 	bool operator>=(const IntDecimal&);
 
 	bool operator<=(const short&);
 	bool operator<=(const unsigned short&);
 	bool operator<=(const int&);
 	bool operator<=(const unsigned int&);
-	bool operator<=(const float&);
-	bool operator<=(const double&);
 	bool operator<=(const IntDecimal&);
 
 	bool operator>(const short&);
 	bool operator>(const unsigned short&);
 	bool operator>(const int&);
 	bool operator>(const unsigned int&);
-	bool operator>(const float&);
-	bool operator>(const double&);
 	bool operator>(const IntDecimal&);
 
 	bool operator<(const short&);
 	bool operator<(const unsigned short&);
 	bool operator<(const int&);
 	bool operator<(const unsigned int&);
-	bool operator<(const float&);
-	bool operator<(const double&);
 	bool operator<(const IntDecimal&);
 
-	/*IntDecimal& operator=(const short&);
+	IntDecimal& operator=(const short&);
 	IntDecimal& operator=(const unsigned short&);
 	IntDecimal& operator=(const int&);
 	IntDecimal& operator=(const unsigned int&);
-	IntDecimal& operator=(const float&);
-	IntDecimal& operator=(const double&);
-	IntDecimal& operator=(const IntDecimal&);*/
+
+	IntDecimal& operator=(float);
+	//(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//(단, -2147480000 이하시 -214748000로 표기 (INT_MIN == -2147483648)
+	//(단, +2147480000 이상시 +214748000로 표기 (INT_MAX == +2147483647)
+
+	IntDecimal& operator=(double);
+	//(유효숫자 6자리까지 유효 / 소수점 7자리 이하 절삭)
+	//(단, -2147483647 이하시 -2147483647로 표기 (INT_MIN == -2147483648)
+	//(단, +2147483647 이상시 +2147483647로 표기 (INT_MAX == +2147483647)
+
+	IntDecimal& operator=(const IntDecimal&);
+
+	bool operator!();
 
 	//=====================================
 	//그 외
