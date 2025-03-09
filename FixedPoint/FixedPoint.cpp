@@ -266,9 +266,11 @@ FixedPoint operator-(const FixedPoint& obj) {
 
 bool operator!(const FixedPoint& obj) {
 	if (obj.integerPart)
-		return true;
+		return false;
 	if (obj.decimalPart)
-		return true;
+		return false;
+
+	return true;
 }
 
 
@@ -1062,8 +1064,8 @@ FixedPoint operator/(const FixedPoint& lhs, const FixedPoint& rhs) {
 	}
 
 	// 반올림
-	std::cout << longlongLhs;
-	if (longlongLhs >= 500000)
+	longlongLhs %= longlongRhs;
+	if (longlongLhs*2 >= longlongRhs)
 		result.decimalPart++;
 
 	// 부호 책정
@@ -1082,12 +1084,8 @@ FixedPoint operator/(const int &lhs, const FixedPoint& rhs){
 	}
 
 	FixedPoint fixedpointLhs = lhs;
-	// rhs가 정수인 경우
-	if (rhs.decimalPart == 0)
-		return lhs / rhs.integerPart;
 
-
-	return lhs / rhs;
+	return fixedpointLhs / rhs;
 }
 
 // 0으로 나눌려 시도시 INT_MIN-0.999999 리턴
@@ -1099,12 +1097,9 @@ FixedPoint operator/(const unsigned int&lhs, const FixedPoint& rhs){
 	}
 
 	FixedPoint fixedpointLhs = lhs;
-	// rhs가 정수인 경우
-	if (rhs.decimalPart == 0)
-		return lhs / rhs.integerPart;
 
 
-	return lhs / rhs;
+	return fixedpointLhs / rhs;
 }
 
 
