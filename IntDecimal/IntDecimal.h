@@ -66,29 +66,29 @@ public:
 	IntDecimal operator/(const unsigned int&) const;
 	IntDecimal operator/(const IntDecimal&) const;
 
-	IntDecimal& operator+=(const short&) const;
-	IntDecimal& operator+=(const unsigned short&) const;
-	IntDecimal& operator+=(const int&) const;
-	IntDecimal& operator+=(const unsigned int&) const;
-	IntDecimal& operator+=(const IntDecimal&) const;
+	IntDecimal& operator+=(const short&);
+	IntDecimal& operator+=(const unsigned short&);
+	IntDecimal& operator+=(const int&);
+	IntDecimal& operator+=(const unsigned int&);
+	IntDecimal& operator+=(const IntDecimal&);
 
-	IntDecimal& operator-=(const short&) const;
-	IntDecimal& operator-=(const unsigned short&) const;
-	IntDecimal& operator-=(const int&) const;
-	IntDecimal& operator-=(const unsigned int&) const;
-	IntDecimal& operator-=(const IntDecimal&) const;
+	IntDecimal& operator-=(const short&);
+	IntDecimal& operator-=(const unsigned short&);
+	IntDecimal& operator-=(const int&);
+	IntDecimal& operator-=(const unsigned int&);
+	IntDecimal& operator-=(const IntDecimal&);
 
-	IntDecimal& operator*=(const short&) const;
-	IntDecimal& operator*=(const unsigned short&) const;
-	IntDecimal& operator*=(const int&) const;
-	IntDecimal& operator*=(const unsigned int&) const;
-	IntDecimal& operator*=(const IntDecimal&) const;
+	IntDecimal& operator*=(const short&);
+	IntDecimal& operator*=(const unsigned short&);
+	IntDecimal& operator*=(const int&);
+	IntDecimal& operator*=(const unsigned int&);
+	IntDecimal& operator*=(const IntDecimal&);
 
-	IntDecimal& operator/=(const short&) const;
-	IntDecimal& operator/=(const unsigned short&) const;
-	IntDecimal& operator/=(const int&) const;
-	IntDecimal& operator/=(const unsigned int&) const;
-	IntDecimal& operator/=(const IntDecimal&) const;
+	IntDecimal& operator/=(const short&);
+	IntDecimal& operator/=(const unsigned short&);
+	IntDecimal& operator/=(const int&);
+	IntDecimal& operator/=(const unsigned int&);
+	IntDecimal& operator/=(const IntDecimal&);
 
 	bool operator==(const short&) const;
 	bool operator==(const unsigned short&) const;
@@ -150,14 +150,16 @@ public:
 	float toFloat() const;					// float로 변환
 	double toDouble() const;				// Double로 변환
 
-	IntDecimal abc() const;					// 절대값 전달
+	IntDecimal abs() const;					// 절대값 전달
 
 	unsigned int getIntegerPart() const; 	// 정수부 전달
 	unsigned int getDecimalPart() const; 	// 소수부 전달
 	bool getSign() const;					// 부호 전달
 	char printSign() const			;		// 부호 출력
 
-
+	void setIntegerPart(unsigned int);		// 정수부 조작
+	void setDecimalPart(unsigned int);		// 소수부 조작
+	void setIsPositive(bool);				// 부호 조작
 	
 };
 
