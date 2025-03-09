@@ -27,7 +27,7 @@ void displayInputMessage() {
 	std::cout << "======================================" << '\n';
 
 
-	std::cout << "값 입력 : ";
+	std::cout << "명령어 입력 : ";
 }
 
 void mainLoop(short* input, int& a, const int& b) {

@@ -59,10 +59,11 @@ void inputfirst(short* input,const short& index, int& intA, unsigned int& unsign
 	std::cout << "7. int, unsigned int => FixedPoint" << '\n';
 	std::cout << "8. unsigned int, unsigned int => FixedPoint" << '\n';
 	std::cout << "0. Quit" << '\n';
+	std::cout << "text. Quit" << '\n';
 	std::cout << "======================================" << '\n';
 
-
 	while (1) {
+		std::cout << "명령어 입력 : ";
 		std::cin >> input[index];
 		bool escape = true;
 		switch (input[index]) {
@@ -84,6 +85,7 @@ void inputfirst(short* input,const short& index, int& intA, unsigned int& unsign
 			exit(0);
 		default:
 			escape = false;
+
 		}
 
 		if (escape)
