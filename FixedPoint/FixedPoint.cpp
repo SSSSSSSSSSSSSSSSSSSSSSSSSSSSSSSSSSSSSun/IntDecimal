@@ -939,7 +939,7 @@ FixedPoint operator*(const FixedPoint& lhs, const FixedPoint& rhs) {
 		}
 		result += lhs.integerPart * rhs.integerPart;
 	}
-	// 위 코드 문제있음
+
 
 
 	// 부호 책정
