@@ -30,6 +30,7 @@ void inputIntDecimal(short input, IntDecimal& data) {
 	return;
 }
 
+
 int main() {
 
 	std::cout << "======================================" << '\n';
@@ -53,21 +54,21 @@ int main() {
 			exit(0);
 	}
 
+	
+	int k = 4;
 	IntDecimal c(-9,1234450);
-	IntDecimal b(-0,0);
+	IntDecimal b(2,15);
 	std::cout << c.printSign() << c.getIntegerPart() << '.' << c.getDecimalPart() << '\n';
-	c = c * b;
-
-	short k = 1;
-
+	c = k - b;
+	
 	//std::cout << d.printSign() << d.getIntegerPart() << '.' << d.getDecimalPart() << '\n';
 	std::cout << b.printSign() << b.getIntegerPart() << '.' << b.getDecimalPart() << '\n';
 	std::cout << c.printSign() << c.getIntegerPart() << '.' << c.getDecimalPart() << '\n';
-
+	
 	std::cout << a.printSign() << a.getIntegerPart() << '.' << a.getDecimalPart() << '\n';
 	std::cout << "a.toInt() : " << a.toInt() << '\n';
 	std::cout << "a.toDouble() : " << a.toDouble() << '\n';
 	std::cout << "a.toFloat() : " << a.toFloat() << '\n';
-	std::cout << (a==0) << '\n';
+	//std::cout << (a==0) << '\n';
 
 }

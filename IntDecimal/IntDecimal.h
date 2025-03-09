@@ -13,8 +13,6 @@ public:
 
 	IntDecimal();						// 0.0
 
-	IntDecimal(const short&);			// short로 생성				(~32768~32767)
-	IntDecimal(const unsigned short&);	// unsigned short로 생성	(0~65535)
 	IntDecimal(const int&);				// int로 생성				(~2147483648~2147483647)
 	IntDecimal(const unsigned int&);	// unsigned int로 생성		(0~4294967295)
 	IntDecimal(const int&, const unsigned int&);	// 정수부, 소수부로 생성 (소수부 999999 초과시 0으로 계산)
@@ -36,92 +34,24 @@ public:
 	IntDecimal(const IntDecimal&);		// 복사생성
 
 	//=====================================
-	//연산자, float, double과의 연산자 사용 안함 (정확도 낮음)
+	//연산자, float, double과의 산술/비교 연산자 사용 안함 (정확도 낮음)
 	//=====================================
-
-	IntDecimal operator-() const;
-
-	IntDecimal operator+(const short&) const;
-	IntDecimal operator+(const unsigned short&) const;
-	IntDecimal operator+(const int&) const;
-	IntDecimal operator+(const unsigned int&) const;
-	IntDecimal operator+(const IntDecimal&) const;
-
-	IntDecimal operator-(const short&) const;
-	IntDecimal operator-(const unsigned short&) const;
-	IntDecimal operator-(const int&) const;
-	IntDecimal operator-(const unsigned int&) const;
-	IntDecimal operator-(const IntDecimal&) const;
-
-	// 정수부나 지수부 오버플로우시 INT_MIN-0.999999 리턴
-	IntDecimal operator*(const short&) const;
-	IntDecimal operator*(const unsigned short&) const;
-	IntDecimal operator*(const int&) const;
-	IntDecimal operator*(const unsigned int&) const;
-	IntDecimal operator*(const IntDecimal&) const;
-
-	IntDecimal operator/(const short&) const;
-	IntDecimal operator/(const unsigned short&) const;
-	IntDecimal operator/(const int&) const;
-	IntDecimal operator/(const unsigned int&) const;
-	IntDecimal operator/(const IntDecimal&) const;
-
-	IntDecimal& operator+=(const short&);
-	IntDecimal& operator+=(const unsigned short&);
 	IntDecimal& operator+=(const int&);
 	IntDecimal& operator+=(const unsigned int&);
 	IntDecimal& operator+=(const IntDecimal&);
 
-	IntDecimal& operator-=(const short&);
-	IntDecimal& operator-=(const unsigned short&);
 	IntDecimal& operator-=(const int&);
 	IntDecimal& operator-=(const unsigned int&);
 	IntDecimal& operator-=(const IntDecimal&);
 
-	IntDecimal& operator*=(const short&);
-	IntDecimal& operator*=(const unsigned short&);
 	IntDecimal& operator*=(const int&);
 	IntDecimal& operator*=(const unsigned int&);
 	IntDecimal& operator*=(const IntDecimal&);
 
-	IntDecimal& operator/=(const short&);
-	IntDecimal& operator/=(const unsigned short&);
 	IntDecimal& operator/=(const int&);
 	IntDecimal& operator/=(const unsigned int&);
 	IntDecimal& operator/=(const IntDecimal&);
 
-	bool operator==(const short&) const;
-	bool operator==(const unsigned short&) const;
-	bool operator==(const int&) const;
-	bool operator==(const unsigned int&) const;
-	bool operator==(const IntDecimal&) const;
-
-	bool operator>=(const short&) const;
-	bool operator>=(const unsigned short&) const;
-	bool operator>=(const int&) const;
-	bool operator>=(const unsigned int&) const;
-	bool operator>=(const IntDecimal&) const;
-
-	bool operator<=(const short&) const;
-	bool operator<=(const unsigned short&) const;
-	bool operator<=(const int&) const;
-	bool operator<=(const unsigned int&) const;
-	bool operator<=(const IntDecimal&) const;
-
-	bool operator>(const short&) const;
-	bool operator>(const unsigned short&) const;
-	bool operator>(const int&) const;
-	bool operator>(const unsigned int&) const;
-	bool operator>(const IntDecimal&) const;
-
-	bool operator<(const short&) const;
-	bool operator<(const unsigned short&) const;
-	bool operator<(const int&) const;
-	bool operator<(const unsigned int&) const;
-	bool operator<(const IntDecimal&) const;
-
-	IntDecimal& operator=(const short&);
-	IntDecimal& operator=(const unsigned short&);
 	IntDecimal& operator=(const int&);
 	IntDecimal& operator=(const unsigned int&);
 
@@ -139,7 +69,63 @@ public:
 
 	IntDecimal& operator=(const IntDecimal&);
 
-	bool operator!() const;
+	friend IntDecimal operator-(const IntDecimal&);
+	friend bool operator!(const IntDecimal&);
+
+	friend IntDecimal operator+(const IntDecimal&, const int&);
+	friend IntDecimal operator+(const IntDecimal&, const unsigned int&);
+	friend IntDecimal operator+(const IntDecimal&, const IntDecimal&);
+	friend IntDecimal operator+(const int&, const IntDecimal&);
+	friend IntDecimal operator+(const unsigned int&, const IntDecimal&);
+
+	friend IntDecimal operator-(const IntDecimal&, const int&);
+	friend IntDecimal operator-(const IntDecimal&, const unsigned int&);
+	friend IntDecimal operator-(const IntDecimal&, const IntDecimal&);
+	friend IntDecimal operator-(const int&, const IntDecimal&);
+	friend IntDecimal operator-(const unsigned int&, const IntDecimal&);
+
+	// 정수부나 지수부 오버플로우시 INT_MIN-0.999999 리턴
+	friend IntDecimal operator*(const IntDecimal&, const int&);
+	friend IntDecimal operator*(const IntDecimal&, const unsigned int&);
+	friend IntDecimal operator*(const IntDecimal&, const IntDecimal&);
+	friend IntDecimal operator*(const int&, const IntDecimal&);
+	friend IntDecimal operator*(const unsigned int&, const IntDecimal&);
+
+	friend IntDecimal operator/(const IntDecimal&, const int&);
+	friend IntDecimal operator/(const IntDecimal&, const unsigned int&);
+	friend IntDecimal operator/(const IntDecimal&, const IntDecimal&);
+	friend IntDecimal operator/(const int&, const IntDecimal&);
+	friend IntDecimal operator/(const unsigned int&, const IntDecimal&);
+
+	friend bool operator==(const IntDecimal&, const int&);
+	friend bool operator==(const IntDecimal&, const unsigned int&);
+	friend bool operator==(const IntDecimal&, const IntDecimal&);
+	friend bool operator==(const int&, const IntDecimal&);
+	friend bool operator==(const unsigned int&, const IntDecimal&);
+
+	friend bool operator>(const IntDecimal&, const int&);
+	friend bool operator>(const IntDecimal&, const unsigned int&);
+	friend bool operator>(const IntDecimal&, const IntDecimal&);
+	friend bool operator>(const int&, const IntDecimal&);
+	friend bool operator>(const unsigned int&, const IntDecimal&);
+
+	friend bool operator<(const IntDecimal&, const int&);
+	friend bool operator<(const IntDecimal&, const unsigned int&);
+	friend bool operator<(const IntDecimal&, const IntDecimal&);
+	friend bool operator<(const int&, const IntDecimal&);
+	friend bool operator<(const unsigned int&, const IntDecimal&);
+
+	friend bool operator>=(const IntDecimal&, const int&);
+	friend bool operator>=(const IntDecimal&, const unsigned int&);
+	friend bool operator>=(const IntDecimal&, const IntDecimal&);
+	friend bool operator>=(const int&, const IntDecimal&);
+	friend bool operator>=(const unsigned int&, const IntDecimal&);
+
+	friend bool operator<=(const IntDecimal&, const int&);
+	friend bool operator<=(const IntDecimal&, const unsigned int&);
+	friend bool operator<=(const IntDecimal&, const IntDecimal&);
+	friend bool operator<=(const int&, const IntDecimal&);
+	friend bool operator<=(const unsigned int&, const IntDecimal&);
 
 	//=====================================
 	//그 외
@@ -162,4 +148,3 @@ public:
 	void setIsPositive(bool);				// 부호 조작
 	
 };
-
