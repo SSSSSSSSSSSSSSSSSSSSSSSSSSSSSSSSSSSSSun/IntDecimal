@@ -914,7 +914,6 @@ FixedPoint operator*(const FixedPoint& lhs, const FixedPoint& rhs) {
 	unsigned long long int productOfDecimalPart = lhs.decimalPart;
 	productOfDecimalPart *= rhs.decimalPart;
 	result.setDecimalPart(static_cast<int>(productOfDecimalPart / 1000000));
-	
 	// 반올림
 	productOfDecimalPart %= 1000000;
 	productOfDecimalPart /= 100000;
@@ -922,12 +921,10 @@ FixedPoint operator*(const FixedPoint& lhs, const FixedPoint& rhs) {
 	if (productOfDecimalPart >= 5)
 		result.setDecimalPart(result.getDecimalPart() + 1);
 
-
 	// A*0.D
 	FixedPoint D(0, rhs.decimalPart, true);
 	result += lhs.integerPart * D;
 	
-
 	// 0.B*C
 	FixedPoint B(0, lhs.decimalPart, true);
 	result += B * rhs.integerPart;
@@ -935,13 +932,15 @@ FixedPoint operator*(const FixedPoint& lhs, const FixedPoint& rhs) {
 	// A*C
 	// 
 	// 정수부가 둘다 0이 아닐때만 작동함
-	if (lhs.integerPart || rhs.integerPart) {
+	if (lhs.integerPart && rhs.integerPart) {
 		// 오버플로우 검사
 		if (lhs.integerPart > (INT_MAX * 2u + 1u - result.integerPart) / rhs.integerPart) {
 			return FixedPoint(INT_MAX * 2u + 1u, 999999, false);
 		}
 		result += lhs.integerPart * rhs.integerPart;
 	}
+	// 위 코드 문제있음
+
 
 	// 부호 책정
 	result.isPositive = not (lhs.isPositive ^ rhs.isPositive);
@@ -950,11 +949,11 @@ FixedPoint operator*(const FixedPoint& lhs, const FixedPoint& rhs) {
 }
 
 FixedPoint operator*(const int& lhs, const FixedPoint& rhs) {
-	return rhs * lhs;
+	return (rhs * lhs);
 }
 
 FixedPoint operator*(const unsigned int& lhs, const FixedPoint& rhs) {
-	return rhs * lhs;
+	return (rhs * lhs);
 }
 
 //============
